@@ -32,16 +32,8 @@ int main()
 	});
 	glfwSetKeyCallback(window, [](GLFWwindow* window,int key,int scancode,int action,int mods) 
 	{
-		if (action != GLFW_PRESS)
-			return;
-		switch (key)
-		{
-		case GLFW_KEY_ESCAPE:
-			glfwSetWindowShouldClose(window, GL_TRUE);
-			break;
-		default:
-			break;
-		}
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, true);
 	});
 
 	glewExperimental = GL_TRUE;
@@ -52,14 +44,14 @@ int main()
 		return -1;
 	}
 
-	
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	
 	while (!glfwWindowShouldClose(window)) {
 
 
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
