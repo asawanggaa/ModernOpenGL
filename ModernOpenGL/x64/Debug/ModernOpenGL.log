@@ -1,3 +1,4 @@
 ﻿  ModernOpenGL.cpp
+c:\users\wang\desktop\modernopengl\modernopengl\modernopengl.cpp(132): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
   ModernOpenGL.vcxproj -> C:\Users\wang\Desktop\ModernOpenGL\x64\Debug\ModernOpenGL.exe
   ModernOpenGL.vcxproj -> C:\Users\wang\Desktop\ModernOpenGL\x64\Debug\ModernOpenGL.pdb (Partial PDB)
