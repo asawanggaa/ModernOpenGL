@@ -1,0 +1,9 @@
+﻿  stdafx.cpp
+c:\users\wang\desktop\modernopengl\modernopengl\stdafx.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\users\wang\desktop\modernopengl\modernopengl\stdafx.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\users\wang\desktop\modernopengl\modernopengl\targetver.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  ModernOpenGL.cpp
+ModernOpenGL.obj : error LNK2019: 无法解析的外部符号 __imp__glClear@4，该符号在函数 _main 中被引用
+ModernOpenGL.obj : error LNK2019: 无法解析的外部符号 __imp__glClearColor@16，该符号在函数 _main 中被引用
+ModernOpenGL.obj : error LNK2019: 无法解析的外部符号 __imp__glViewport@16，该符号在函数 "void __cdecl framebuffer_size_callback(struct GLFWwindow *,int,int)" (?framebuffer_size_callback@@YAXPAUGLFWwindow@@HH@Z) 中被引用
+C:\Users\wang\Desktop\ModernOpenGL\Debug\ModernOpenGL.exe : fatal error LNK1120: 3 个无法解析的外部命令
