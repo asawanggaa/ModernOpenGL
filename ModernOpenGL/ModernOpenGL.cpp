@@ -5,6 +5,10 @@
 #include <GL\glut.h>
 #include <GLFW\glfw3.h>
 
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "shader.h"
@@ -12,9 +16,10 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+using namespace std;
 
 int main()
-{
+{ 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -91,6 +96,11 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(data);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+
 	Shader shader("shader.vs", "shader.fs");
 	shader.use();
 	shader.setInt("texture1", 0);
@@ -135,27 +145,38 @@ int main()
 
 //	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
+	//Transform
+	glm::mat4 trans1,trans2;
+	trans1 = glm::translate(trans1, glm::vec3(0.5f, -0.5f, 0.0f));
+	trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
+
+
 	while (!glfwWindowShouldClose(window)) {
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-
 		shader.use();
-
+		unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
+		
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans1));
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
+		float rate = 1 + sinf((float)glfwGetTime());
+		rate = rate / 2;
+		glm::mat4 trans3 = glm::scale(trans2, glm::vec3(rate, rate, rate));
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans3));
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);

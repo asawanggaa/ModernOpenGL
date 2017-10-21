@@ -11,12 +11,11 @@
 #include <iostream>
 
 
-class Shader
-{
+class Shader {
 public:
 	unsigned int ID;
 
-	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+	Shader(const char* vertexPath, const char* fragmentPath);
 
 	void use();
 
