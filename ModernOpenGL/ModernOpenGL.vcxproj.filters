@@ -33,18 +33,15 @@
     <ClInclude Include="texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ModernOpenGL.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="texture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
