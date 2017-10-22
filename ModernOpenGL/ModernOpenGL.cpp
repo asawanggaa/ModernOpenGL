@@ -8,6 +8,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
+#include <glm\ext.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -15,6 +16,14 @@
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+float lastX = SCR_WIDTH / 2, lastY = SCR_HEIGHT / 2;
+float yaw = -90.0f, pitch = 0.0f;
+bool firstMouse = true;
+float fov = 45.0f;
 
 using namespace std;
 
@@ -40,11 +49,64 @@ int main()
 		glfwSwapBuffers(window);
 		glViewport(0, 0, width, height); 
 	});
-	glfwSetKeyCallback(window, [](GLFWwindow* window,int key,int scancode,int action,int mods) 
-	{
+
+	glfwSetKeyCallback(window, [](GLFWwindow* window,int key,int scancode,int action,int mods){
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
+		float cameraSpeed = 0.05f;
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			cameraPos += cameraSpeed * cameraFront;
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			cameraPos -= cameraSpeed * cameraFront;
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	});
+
+	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+		
+		if (firstMouse) // 这个bool变量初始时是设定为true的
+		{
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = ypos - lastY;
+		lastX = xpos;
+		lastY = ypos;
+
+		float sensitivity = 0.05f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		yaw += xoffset;
+		pitch += yoffset;
+		if (pitch > 89.0f)
+			pitch = 89.0f;
+		if (pitch < -89.0f)
+			pitch = -89.0f;
+
+		glm::vec3 front;
+		front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+		front.y = sin(glm::radians(pitch));
+		front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+		cameraFront = glm::normalize(front);
+
+	});
+	glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset) {
+		if (fov >= 1.0f && fov <= 45.0f)
+			fov -= yoffset;
+		if (fov <= 1.0f)
+			fov = 1.0f;
+		if (fov >= 45.0f)
+			fov = 45.0f;
+	});
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 
 	glewExperimental = GL_TRUE;
 	GLenum err = glewInit();
@@ -196,8 +258,11 @@ int main()
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	glEnable(GL_DEPTH_TEST);
 
+
+
+
+	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window)) {
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -212,9 +277,9 @@ int main()
 			model = glm::rotate(model, glm::radians(20.0f*i), glm::vec3(1.0f, 0.3f, 0.5f));
 			model = glm::rotate(model, (float)glfwGetTime()*glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 			glm::mat4 view;
-			view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+			view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 			glm::mat4 projection;
-			projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
 
 			shader.setMat4("model", model);
 			shader.setMat4("view", view);
@@ -237,4 +302,3 @@ int main()
 
     return 0;
 }
-
