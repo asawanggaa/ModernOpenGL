@@ -19,7 +19,7 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -99,13 +99,25 @@ int main()
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	
 
-	// img load;
-	
 	Texture texture1("container.jpg");
 	Texture texture2("tusun.jpg", GL_RGB, true);
 
-	//code below for draw element
-	//build VAO for drawing
+	Shader shader("shader.vs", "shader.fs");
+	shader.use();
+
+	shader.setInt("texture1", 0);
+	shader.setInt("texture2", 1);
+
+	Shader lightingshader("lightingshader.vs", "lightingshader.fs");
+	lightingshader.use();
+
+	glm::vec3 lightPos = glm::vec3(0.0f, 3.0f, 0.0f);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture1.ID);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture2.ID);
+
 	float vertices[] = {
 		//first triangle
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -155,6 +167,8 @@ int main()
 	//	1,2,3
 	//};
 
+
+
 	unsigned int VAO, VBO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -175,21 +189,22 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 	glBindVertexArray(0);
 
+	unsigned int LightingVAO;
+	glGenVertexArrays(1, &LightingVAO);
+	glBindVertexArray(LightingVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
 	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	//Transform
 
 	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture1.ID);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture2.ID);
 
-	Shader shader("shader.vs", "shader.fs");
-	shader.use();
 
-	shader.setInt("texture1", 0);
-	shader.setInt("texture2", 1);
+
 
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
@@ -205,17 +220,17 @@ int main()
 	};
 
 	glEnable(GL_DEPTH_TEST);
+
 	while (!glfwWindowShouldClose(window)) {
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-		shader.use();
-
 		glBindVertexArray(VAO);
+		shader.use();
 		for(unsigned int i = 0; i < 10; i++) {
 			glm::mat4 model;
 			model = glm::translate(model, cubePositions[i]);
@@ -225,15 +240,31 @@ int main()
 			view = camera.GetViewMatrix();
 			glm::mat4 projection;
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
+			shader.setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+			shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 			shader.setMat4("model", model);
 			shader.setMat4("view", view);
 			shader.setMat4("projection", projection);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+
+		glBindVertexArray(LightingVAO);
+		lightingshader.use();
+		glm::mat4 lightModel;
+		lightModel = glm::translate(lightModel, lightPos);
+		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+		glm::mat4 lightView;
+		lightView = camera.GetViewMatrix();
+		glm::mat4 lightProjection;
+		lightProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		lightingshader.setMat4("model", lightModel);
+		lightingshader.setMat4("view", lightView);
+		lightingshader.setMat4("projection", lightProjection);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
