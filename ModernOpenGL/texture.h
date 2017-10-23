@@ -12,10 +12,10 @@
 class Texture {
 public:
 	unsigned int ID;
-	Texture(const char* texturePath, bool flip = false) {
+	Texture(const char* texturePath, GLenum format = GL_RGB, bool flip = false) {
 		int width, height, nrChannels;
-		if (flip == true)
-			stbi_set_flip_vertically_on_load(true);
+		
+		stbi_set_flip_vertically_on_load(flip);
 		unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
 
 		glGenTextures(1, &ID);
@@ -25,7 +25,7 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		if (data) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else {
