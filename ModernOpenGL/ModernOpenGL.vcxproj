@@ -154,7 +154,9 @@
     <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ModernOpenGL.cpp" />
+    <ClCompile Include="Basic.cpp" />
+    <ClCompile Include="Lighting.cpp" />
+    <ClCompile Include="shader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -163,6 +165,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="lightingshader.fs" />
+    <None Include="lightingshader.vs" />
     <None Include="packages.config" />
     <None Include="shader.fs" />
     <None Include="shader.vs" />

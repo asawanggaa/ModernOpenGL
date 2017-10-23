@@ -41,7 +41,13 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ModernOpenGL.cpp">
+    <ClCompile Include="Basic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,6 +57,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="shader.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lightingshader.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lightingshader.fs">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

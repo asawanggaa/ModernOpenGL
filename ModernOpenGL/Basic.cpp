@@ -42,6 +42,7 @@ int main()
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) 
 	{
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -49,7 +50,6 @@ int main()
 		glfwSwapBuffers(window);
 		glViewport(0, 0, width, height); 
 	});
-
 	glfwSetKeyCallback(window, [](GLFWwindow* window,int key,int scancode,int action,int mods){
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
@@ -105,7 +105,7 @@ int main()
 			fov = 45.0f;
 	});
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
 	glewExperimental = GL_TRUE;
@@ -140,7 +140,7 @@ int main()
 	stbi_image_free(data);
 
 	stbi_set_flip_vertically_on_load(true);
-	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+	data = stbi_load("tusun.jpg", &width, &height, &nrChannels, 0);
 	unsigned int texture2;
 	glGenTextures(1, &texture2);
 	glBindTexture(GL_TEXTURE_2D, texture2);
@@ -149,7 +149,7 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {

@@ -7,21 +7,22 @@
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
-
 #include <vector>
 
-enum Camera_Movement {
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT
-};
 
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 2.5f;
 const float SENSITIVTY = 0.1f;
 const float ZOOM = 45.0f;
+
+enum Camera_Movement
+{
+	FORWARD,
+	BACKWARD,
+	LEFT,
+	RIGHT
+};
 
 class Camera
 {
