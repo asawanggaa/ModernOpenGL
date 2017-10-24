@@ -6,6 +6,6 @@ c:\users\wang\desktop\modernopengl\modernopengl\main.cpp(75): warning C4244: “
 c:\users\wang\desktop\modernopengl\modernopengl\main.cpp(76): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 c:\users\wang\desktop\modernopengl\modernopengl\main.cpp(77): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 c:\users\wang\desktop\modernopengl\modernopengl\main.cpp(86): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-c:\users\wang\desktop\modernopengl\modernopengl\main.cpp(225): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\wang\desktop\modernopengl\modernopengl\main.cpp(203): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
   ModernOpenGL.vcxproj -> C:\Users\wang\Desktop\ModernOpenGL\x64\Debug\ModernOpenGL.exe
   ModernOpenGL.vcxproj -> C:\Users\wang\Desktop\ModernOpenGL\x64\Debug\ModernOpenGL.pdb (Partial PDB)
